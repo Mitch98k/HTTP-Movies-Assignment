@@ -4,6 +4,7 @@ import axios from 'axios';
 
 function UpdateMovie() {
     const { id } = useParams();
+    const { push } = useHistory();
 
     const [info, setInfo] = useState({
         id: null,
@@ -32,9 +33,20 @@ function UpdateMovie() {
         setInfo({...info, [e.target.name]: e.target.value});
     };
 
+    const handleSubmit = e => {
+        e.preventDefault();
+        axios.put(`http://localhost:5000/api/movies/${id}`, info)
+        .then(res => {
+            console.log(res);
+            setInfo(res.data);
+            push(`/movies/${id}`);
+        })
+        .catch(err => console.log(err));
+    };
+
     return (
         <div>
-            <form>
+            <form onSubmit={handleSubmit}>
                 <label htmlFor='title'>Title: 
                     <input
                     id='title'
